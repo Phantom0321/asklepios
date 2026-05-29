@@ -4,618 +4,753 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ASKlepios">
-<meta name="theme-color" content="#0D0D1E">
 <title>ASKlepios</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;}
-html,body{width:100%;height:100%;overflow:hidden;background:#0D0D1E;color:#fff;font-family:-apple-system,sans-serif;}
-
-:root{
-  --bg:#0D0D1E;
-  --bg2:#16162A;
-  --blue:#1A5BA0;
-  --green:#157040;
-  --purple:#4A2E8A;
-  --orange:#A05010;
-  --teal:#0A6A5A;
-  --red:#902020;
-  --accent:#4A90D9;
-  --gray:#8888AA;
-}
-
-/* ===== SCREENS ===== */
-.screen{position:absolute;top:0;left:0;width:100%;height:100%;display:none;flex-direction:column;}
-.screen.active{display:flex;}
-
-/* ===== HEADER ===== */
-.hdr{background:var(--bg2);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid #222240;}
-.logo{font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;}
-.logo span{color:var(--accent);}
-.clock-wrap{text-align:right;}
-.clock-time{font-size:24px;font-weight:700;}
-.clock-date{font-size:12px;color:var(--gray);margin-top:2px;}
-
-/* ===== HOME GRID ===== */
-#home-grid{display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:14px;padding:14px;flex:1;}
-.tile{border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .12s,opacity .12s;padding:16px 8px;position:relative;overflow:hidden;}
-.tile::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.06);border-radius:20px;opacity:0;transition:opacity .15s;}
-.tile:active{transform:scale(0.91);}
-.tile:active::before{opacity:1;}
-.tile-icon{font-size:44px;margin-bottom:10px;line-height:1;}
-.tile-title{font-size:15px;font-weight:700;text-align:center;line-height:1.2;}
-.tile-sub{font-size:11px;text-align:center;margin-top:5px;opacity:0.75;line-height:1.3;}
-
-.t-blue{background:linear-gradient(145deg,#1E65B0,#0F3A70);}
-.t-green{background:linear-gradient(145deg,#1A7A4A,#0D4A2A);}
-.t-purple{background:linear-gradient(145deg,#5A3A9A,#31206A);}
-.t-orange{background:linear-gradient(145deg,#C06010,#7A3A08);}
-.t-teal{background:linear-gradient(145deg,#0F8070,#074A40);}
-.t-red{background:linear-gradient(145deg,#B02828,#6A1010);}
-
-/* ===== SUB HEADER ===== */
-.sub-hdr{background:var(--bg2);padding:12px 16px;display:flex;align-items:center;gap:12px;flex-shrink:0;border-bottom:1px solid #222240;}
-.btn-back{background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:15px;cursor:pointer;padding:8px 14px;border-radius:10px;font-weight:600;}
-.sub-title{font-size:18px;font-weight:700;flex:1;}
-.status{font-size:13px;color:#44EE88;}
-
-/* ===== SCROLL CONTENT ===== */
-.scontent{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;}
-
-/* ===== AI CHAT ===== */
-#chat-msgs{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px;display:flex;flex-direction:column;gap:10px;}
-.msg{max-width:75%;padding:12px 16px;border-radius:16px;font-size:15px;line-height:1.5;}
-.msg-user{background:var(--blue);align-self:flex-end;border-bottom-right-radius:4px;}
-.msg-ai{background:var(--teal);align-self:flex-start;border-bottom-left-radius:4px;}
-.msg-typing{background:var(--teal);align-self:flex-start;opacity:0.7;border-bottom-left-radius:4px;}
-.chat-bar{background:var(--bg2);padding:12px;display:flex;gap:10px;align-items:center;flex-shrink:0;border-top:1px solid #222240;}
-.chat-in{flex:1;background:#1E1E3A;border:1px solid #333360;border-radius:12px;color:#fff;font-size:15px;padding:11px 16px;outline:none;-webkit-user-select:text;user-select:text;}
-.btn-action{width:46px;height:46px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-
-/* ===== MEDICINE ===== */
-.med-card{border-radius:16px;padding:16px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;}
-.med-card:active{opacity:0.8;}
-.med-ico{font-size:32px;flex-shrink:0;}
-.med-info{flex:1;}
-.med-time{font-size:16px;font-weight:700;}
-.med-pills{font-size:13px;opacity:0.8;margin-top:3px;}
-.med-status{font-size:14px;font-weight:700;flex-shrink:0;}
-.btn-big{width:100%;padding:18px;border-radius:14px;border:none;color:#fff;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;}
-
-/* ===== VIDEO ===== */
-.contact-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px;}
-.contact{border-radius:16px;padding:20px 10px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;}
-.contact:active{opacity:0.8;}
-.c-ico{font-size:40px;}
-.c-name{font-size:15px;font-weight:700;text-align:center;}
-.c-role{font-size:12px;opacity:0.75;}
-
-/* ===== CHECKIN ===== */
-.mood-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:14px 0;}
-.mood-btn{border-radius:16px;padding:18px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;border:3px solid transparent;transition:border-color .15s;}
-.mood-btn.sel{border-color:#fff;}
-.mood-btn:active{opacity:0.8;}
-.mood-ico{font-size:36px;}
-.mood-lbl{font-size:13px;font-weight:700;}
-.checkin-ta{width:100%;background:#1E1E3A;border:1px solid #333360;border-radius:12px;color:#fff;font-size:15px;padding:14px;outline:none;min-height:90px;resize:none;margin:10px 0;-webkit-user-select:text;user-select:text;}
-.section-lbl{font-size:17px;font-weight:700;margin-bottom:12px;margin-top:4px;}
-
-/* ===== MEMORIES ===== */
-.memory-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px;}
-.memory-card{border-radius:14px;background:var(--bg2);padding:16px;border:1px solid #222240;}
-.memory-date{font-size:11px;color:var(--gray);margin-bottom:6px;}
-.memory-text{font-size:14px;line-height:1.5;}
-
-/* ===== COGNITIVE ===== */
-.game-card{border-radius:16px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:16px;cursor:pointer;}
-.game-card:active{opacity:0.8;}
-.game-ico{font-size:34px;flex-shrink:0;}
-.game-title{font-size:16px;font-weight:700;}
-.game-desc{font-size:12px;opacity:0.75;margin-top:3px;}
-
-/* ===== DIALOG ===== */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:100;align-items:center;justify-content:center;padding:24px;}
-.overlay.on{display:flex;}
-.dialog{background:#1E1E3A;border-radius:20px;padding:28px;width:100%;max-width:380px;border:1px solid #333360;}
-.dlg-title{font-size:20px;font-weight:700;margin-bottom:12px;}
-.dlg-msg{font-size:15px;color:#BBBBDD;margin-bottom:24px;line-height:1.6;white-space:pre-line;}
-.dlg-btns{display:flex;gap:12px;flex-wrap:wrap;}
-.dlg-btn{flex:1;min-width:100px;padding:14px;border-radius:12px;border:none;font-size:15px;font-weight:700;cursor:pointer;}
-.dlg-yes{background:var(--red);color:#fff;}
-.dlg-no{background:#2E2E4E;color:#fff;}
-.dlg-ok{background:var(--blue);color:#fff;width:100%;}
-
-/* ===== TOAST ===== */
-.toast{display:none;position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:#2A2A4A;border:1px solid #444466;color:#fff;padding:14px 22px;border-radius:14px;font-size:14px;z-index:200;text-align:center;max-width:300px;box-shadow:0 4px 20px rgba(0,0,0,0.5);}
-.toast.on{display:block;}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; height: 100%; overflow: hidden; background: #0D0D1E; color: #fff; font-family: -apple-system, sans-serif; }
+.screen { position: fixed; inset: 0; display: none; flex-direction: column; background: #0D0D1E; }
+.screen.active { display: flex; }
+.hdr { background: #16162A; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #222240; flex-shrink: 0; }
+.logo { font-size: 20px; font-weight: 700; }
+.logo span { color: #4A90D9; }
+.clock { text-align: right; }
+.clock-time { font-size: 24px; font-weight: 700; color: #4A90D9; }
+.clock-date { font-size: 11px; color: #8888AA; margin-top: 2px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; padding: 14px; flex: 1; }
+.tile { border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; padding: 16px 10px; }
+.tile:active { opacity: 0.8; transform: scale(0.94); }
+.tile-icon { font-size: 44px; margin-bottom: 10px; }
+.tile-title { font-size: 15px; font-weight: 700; text-align: center; }
+.tile-sub { font-size: 11px; text-align: center; margin-top: 4px; opacity: 0.8; }
+.t1 { background: linear-gradient(145deg, #1A8050, #0D4A2A); }
+.t2 { background: linear-gradient(145deg, #1E6AB8, #0E3A78); }
+.t3 { background: linear-gradient(145deg, #0F8878, #074840); }
+.t4 { background: linear-gradient(145deg, #C06018, #782808); }
+.t5 { background: linear-gradient(145deg, #5A38A8, #30206A); }
+.t6 { background: linear-gradient(145deg, #B83030, #6A1010); }
+.shdr { background: #16162A; padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222240; flex-shrink: 0; }
+.back { background: rgba(255,255,255,0.12); border: none; color: #fff; font-size: 15px; cursor: pointer; padding: 8px 14px; border-radius: 10px; font-weight: 600; }
+.stitle { font-size: 18px; font-weight: 700; flex: 1; }
+.scontent { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; }
+.slbl { font-size: 16px; font-weight: 700; margin-bottom: 12px; color: #DDDDFF; }
+.card { border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.card:active { opacity: 0.8; }
+.card-ico { font-size: 30px; flex-shrink: 0; }
+.card-info { flex: 1; }
+.card-title { font-size: 15px; font-weight: 700; }
+.card-sub { font-size: 12px; opacity: 0.8; margin-top: 3px; }
+.card-sub2 { font-size: 11px; opacity: 0.7; margin-top: 3px; font-style: italic; }
+.card-stat { font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.bigbtn { width: 100%; padding: 16px; border-radius: 14px; border: none; color: #fff; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 8px; }
+.bigbtn:active { opacity: 0.8; }
+.bigbtn.done { opacity: 0.45; pointer-events: none; }
+.chat-msgs { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.msg { max-width: 78%; padding: 11px 15px; border-radius: 16px; font-size: 15px; line-height: 1.5; }
+.msg-u { background: #1E6AB8; align-self: flex-end; }
+.msg-a { background: #0F8878; align-self: flex-start; }
+.chatbar { background: #16162A; padding: 10px 12px; display: flex; gap: 8px; align-items: center; border-top: 1px solid #222240; flex-shrink: 0; }
+.chatinput { flex: 1; background: #1E1E3A; border: 1px solid #333360; border-radius: 11px; color: #fff; font-size: 15px; padding: 10px 14px; outline: none; -webkit-user-select: text; user-select: text; }
+.icbtn { width: 44px; height: 44px; border-radius: 11px; border: none; color: #fff; font-size: 19px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.aistatus { font-size: 12px; color: #44EE88; padding: 3px 8px; background: #1E1E3A; border-radius: 8px; }
+.contact-item { background: #16162A; border-radius: 14px; padding: 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; border: 1px solid #222240; }
+.c-av { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.c-info { flex: 1; }
+.c-name { font-size: 15px; font-weight: 700; }
+.c-role { font-size: 12px; color: #8888AA; margin-top: 2px; }
+.c-btns { display: flex; gap: 8px; }
+.cbtn { width: 40px; height: 40px; border-radius: 10px; border: none; color: #fff; font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.mood-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 12px 0 16px; }
+.mood-btn { border-radius: 14px; padding: 14px 8px; display: flex; flex-direction: column; align-items: center; gap: 7px; cursor: pointer; border: 3px solid transparent; }
+.mood-btn.sel { border-color: #fff; }
+.mood-btn:active { opacity: 0.8; }
+.mood-ico { font-size: 32px; }
+.mood-lbl { font-size: 12px; font-weight: 700; }
+.health-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.hcard { background: #16162A; border-radius: 14px; padding: 14px; border: 1px solid #222240; }
+.hlbl { font-size: 12px; color: #8888AA; margin-bottom: 8px; }
+.hrow { display: flex; align-items: center; gap: 6px; }
+.hinput { width: 72px; background: #0D0D1E; border: 1px solid #333360; border-radius: 8px; color: #fff; font-size: 17px; font-weight: 700; padding: 7px 8px; outline: none; -webkit-user-select: text; user-select: text; text-align: center; }
+.hunit { font-size: 11px; color: #8888AA; }
+.textarea { width: 100%; background: #16162A; border: 1px solid #333360; border-radius: 12px; color: #fff; font-size: 15px; padding: 12px 14px; outline: none; min-height: 80px; resize: none; margin-bottom: 12px; -webkit-user-select: text; user-select: text; }
+.mem-add { display: flex; gap: 10px; margin-bottom: 14px; }
+.mem-input { flex: 1; background: #16162A; border: 1px solid #333360; border-radius: 10px; color: #fff; font-size: 14px; padding: 10px 14px; outline: none; -webkit-user-select: text; user-select: text; }
+.mem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.memcard { background: #16162A; border-radius: 14px; padding: 14px; border: 1px solid #222240; position: relative; }
+.memdate { font-size: 10px; color: #8888AA; margin-bottom: 5px; }
+.memtxt { font-size: 13px; line-height: 1.5; }
+.memdel { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #555577; font-size: 15px; cursor: pointer; }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+.overlay.on { display: flex; }
+.dialog { background: #1E1E3A; border-radius: 20px; padding: 26px; width: 100%; max-width: 390px; border: 1px solid #333360; }
+.dlg-title { font-size: 19px; font-weight: 700; margin-bottom: 10px; }
+.dlg-msg { font-size: 14px; color: #BBBBDD; margin-bottom: 20px; line-height: 1.6; white-space: pre-line; }
+.dlg-extra { margin-bottom: 14px; }
+.dlg-extra input { width: 100%; background: #0D0D1E; border: 1px solid #333360; border-radius: 10px; color: #fff; font-size: 16px; padding: 11px 14px; outline: none; -webkit-user-select: text; user-select: text; }
+.dlg-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.dbtn { flex: 1; min-width: 100px; padding: 13px; border-radius: 11px; border: none; font-size: 14px; font-weight: 700; cursor: pointer; }
+.dbtn:active { opacity: 0.8; }
+.db-yes { background: #B03030; color: #fff; }
+.db-no { background: #2E2E4E; color: #fff; }
+.db-ok { background: #1E6AB8; color: #fff; }
+.toast { display: none; position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%); background: #2A2A50; border: 1px solid #4444AA; color: #fff; padding: 13px 22px; border-radius: 14px; font-size: 14px; z-index: 200; text-align: center; max-width: 300px; }
+.toast.on { display: block; }
+#fileInput { display: none; }
+.chat-panel { display: none; flex-direction: column; margin-top: 16px; border-radius: 14px; overflow: hidden; border: 1px solid #222240; }
+.chat-panel.on { display: flex; }
+.cp-hdr { background: #1E1E3A; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; }
+.cp-name { font-size: 15px; font-weight: 700; }
+.cp-close { background: none; border: none; color: #8888AA; font-size: 18px; cursor: pointer; }
+.cp-msgs { background: #1A1A2E; padding: 12px; display: flex; flex-direction: column; gap: 8px; min-height: 150px; max-height: 250px; overflow-y: auto; }
+.cp-msg { max-width: 72%; padding: 9px 13px; border-radius: 12px; font-size: 13px; line-height: 1.4; }
+.cp-out { background: #1E6AB8; align-self: flex-end; }
+.cp-in { background: #2A2A4A; align-self: flex-start; }
+.cp-bar { background: #1E1E3A; padding: 10px; display: flex; gap: 8px; }
+.cp-input { flex: 1; background: #0D0D1E; border: 1px solid #333360; border-radius: 9px; color: #fff; font-size: 14px; padding: 9px 12px; outline: none; -webkit-user-select: text; user-select: text; }
 </style>
 </head>
 <body>
 
-<!-- ══════════════ FŐKÉPERNYŐ ══════════════ -->
 <div id="s-home" class="screen active">
   <div class="hdr">
-    <div class="logo">ASK<span>lepios</span></div>
-    <div class="clock-wrap">
-      <div class="clock-time" id="cTime">--:--</div>
-      <div class="clock-date" id="cDate"></div>
+    <div class="logo">ASK<span>lepios</span> &nbsp;<span id="greet" style="font-size:16px;color:#aaa"></span></div>
+    <div class="clock">
+      <div class="clock-time" id="ctime">--:--</div>
+      <div class="clock-date" id="cdate"></div>
     </div>
   </div>
-  <div id="home-grid">
-    <div class="tile t-blue" onclick="go('ai')">
-      <div class="tile-icon">🤖</div>
-      <div class="tile-title">AI Asszisztens</div>
-      <div class="tile-sub">Magyar hangasszisztens</div>
-    </div>
-    <div class="tile t-green" onclick="go('medicine')">
-      <div class="tile-icon">💊</div>
-      <div class="tile-title">Gyógyszerek</div>
-      <div class="tile-sub" id="nextMedTile">Következő: 20:00</div>
-    </div>
-    <div class="tile t-purple" onclick="go('video')">
-      <div class="tile-icon">📹</div>
-      <div class="tile-title">Videohívás</div>
-      <div class="tile-sub">Egy gombnyomás</div>
-    </div>
-    <div class="tile t-orange" onclick="go('checkin')">
-      <div class="tile-icon">☀️</div>
-      <div class="tile-title">Napi Check-in</div>
-      <div class="tile-sub">Hogy aludt? Mi fáj?</div>
-    </div>
-    <div class="tile t-teal" onclick="go('cognitive')">
-      <div class="tile-icon">🧩</div>
-      <div class="tile-title">Tréning & Emlékek</div>
-      <div class="tile-sub">Játékok és fotók</div>
-    </div>
-    <div class="tile t-red" onclick="showEmergency()">
-      <div class="tile-icon">🆘</div>
-      <div class="tile-title">Segítség</div>
-      <div class="tile-sub">Értesíti a családot</div>
-    </div>
+  <div class="grid">
+    <div class="tile t1" id="btn-med"><div class="tile-icon">💊</div><div class="tile-title">A mai gyógyszereim</div><div class="tile-sub" id="med-sub">Következő: 20:00</div></div>
+    <div class="tile t2" id="btn-ai"><div class="tile-icon">🎙️</div><div class="tile-title">Kérdezem a Tabletet</div><div class="tile-sub">Magyar AI asszisztens</div></div>
+    <div class="tile t3" id="btn-chat"><div class="tile-icon">📞</div><div class="tile-title">Hívom a családom</div><div class="tile-sub">Hívás, videó, üzenet</div></div>
+    <div class="tile t4" id="btn-check"><div class="tile-icon">🩺</div><div class="tile-title">Hogy vagyok ma?</div><div class="tile-sub">Vérnyomás, cukor, hangulat</div></div>
+    <div class="tile t5" id="btn-game"><div class="tile-icon">🧩</div><div class="tile-title">Játékok és emlékek</div><div class="tile-sub">Tréning és fotók</div></div>
+    <div class="tile t6" id="btn-sos"><div class="tile-icon">🆘</div><div class="tile-title">Segítség</div><div class="tile-sub">Mentő és értesítés</div></div>
   </div>
 </div>
 
-<!-- ══════════════ AI ASSZISZTENS ══════════════ -->
 <div id="s-ai" class="screen">
-  <div class="sub-hdr">
-    <button class="btn-back" onclick="go('home')">← Vissza</button>
-    <div class="sub-title">🤖 AI Asszisztens</div>
-    <div class="status" id="aiStat">● Kész</div>
+  <div class="shdr">
+    <button class="back" id="ai-back">← Vissza</button>
+    <div class="stitle">🎙️ Kérdezem a Tabletet</div>
+    <div class="aistatus" id="ai-stat">● Kész</div>
   </div>
-  <div id="chat-msgs"></div>
-  <div class="chat-bar">
-    <input class="chat-in" id="chatIn" type="text" placeholder="Írj üzenetet..." onkeypress="if(event.key==='Enter')sendChat()">
-    <button class="btn-action" onclick="startVoice()" title="Hang">🎤</button>
-    <button class="btn-action" onclick="sendChat()" title="Küldés">▶</button>
+  <div class="chat-msgs" id="chat-msgs"></div>
+  <div class="chatbar">
+    <input class="chatinput" id="chat-input" type="text" placeholder="Írj vagy beszélj...">
+    <button class="icbtn" id="btn-mic" style="background:#1E6AB8">🎤</button>
+    <button class="icbtn" id="btn-img" style="background:#5A38A8">📷</button>
+    <button class="icbtn" id="btn-send" style="background:#1E6AB8">▶</button>
+  </div>
+  <input type="file" id="fileInput" accept="image/*">
+</div>
+
+<div id="s-med" class="screen">
+  <div class="shdr">
+    <button class="back" id="med-back">← Vissza</button>
+    <div class="stitle">💊 A mai gyógyszereim</div>
+  </div>
+  <div class="scontent">
+    <div class="slbl">Mai adagok</div>
+    <div class="card t1" id="mc-r"><div class="card-ico">🌅</div><div class="card-info"><div class="card-title">Reggel — 08:00</div><div class="card-sub">Metformin 500mg · Ramipril 5mg</div><div class="card-sub2">Étkezés után, egy pohár vízzel</div></div><div class="card-stat" id="ms-r">⏳ Még nem</div></div>
+    <button class="bigbtn t1" id="mb-r">✓ Bevettem a reggeli gyógyszereket</button>
+    <div style="height:12px"></div>
+    <div class="card t4" id="mc-d"><div class="card-ico">☀️</div><div class="card-info"><div class="card-title">Délben — 13:00</div><div class="card-sub">Metformin 500mg</div><div class="card-sub2">Étkezés közben</div></div><div class="card-stat" id="ms-d">⏳ Még nem</div></div>
+    <button class="bigbtn t4" id="mb-d">✓ Bevettem a déli gyógyszert</button>
+    <div style="height:12px"></div>
+    <div class="card t2" id="mc-e"><div class="card-ico">🌙</div><div class="card-info"><div class="card-title">Este — 20:00</div><div class="card-sub">Ramipril 5mg · Atorvastatin 10mg</div><div class="card-sub2">Lefekvés előtt 1 órával</div></div><div class="card-stat" id="ms-e">⏳ Még nem</div></div>
+    <button class="bigbtn t2" id="mb-e">✓ Bevettem az esti gyógyszereket</button>
   </div>
 </div>
 
-<!-- ══════════════ GYÓGYSZEREK ══════════════ -->
-<div id="s-medicine" class="screen">
-  <div class="sub-hdr">
-    <button class="btn-back" onclick="go('home')">← Vissza</button>
-    <div class="sub-title">💊 Gyógyszer-emlékeztető</div>
+<div id="s-chat" class="screen">
+  <div class="shdr">
+    <button class="back" id="chat-back">← Vissza</button>
+    <div class="stitle">📞 Hívom a családom</div>
   </div>
   <div class="scontent">
-    <div class="section-lbl">Mai gyógyszerek</div>
-    <div class="med-card t-green" onclick="showMedDetail('reggel')">
-      <div class="med-ico">🌅</div>
-      <div class="med-info">
-        <div class="med-time">Reggel — 08:00</div>
-        <div class="med-pills">Metformin 500mg · Ramipril 5mg</div>
-        <div class="med-pills" style="margin-top:4px;color:#AAFFCC">Étkezés után, vízzel</div>
+    <div class="slbl">Névjegyek</div>
+    <div class="contact-item">
+      <div class="c-av t5">👩</div>
+      <div class="c-info"><div class="c-name">Erzsébet</div><div class="c-role">Lányom</div></div>
+      <div class="c-btns">
+        <button class="cbtn" style="background:#157040" id="call-e1">📞</button>
+        <button class="cbtn" style="background:#1E6AB8" id="vid-e1">📹</button>
+        <button class="cbtn" style="background:#5A38A8" id="msg-e1">💬</button>
       </div>
-      <div class="med-status">✓ Bevéve</div>
     </div>
-    <div class="med-card t-orange" onclick="showMedDetail('del')">
-      <div class="med-ico">☀️</div>
-      <div class="med-info">
-        <div class="med-time">Délben — 13:00</div>
-        <div class="med-pills">Metformin 500mg</div>
-        <div class="med-pills" style="margin-top:4px;color:#FFE8AA">Étkezés közben</div>
+    <div class="contact-item">
+      <div class="c-av t2">👨</div>
+      <div class="c-info"><div class="c-name">István</div><div class="c-role">Fiam</div></div>
+      <div class="c-btns">
+        <button class="cbtn" style="background:#157040" id="call-e2">📞</button>
+        <button class="cbtn" style="background:#1E6AB8" id="vid-e2">📹</button>
+        <button class="cbtn" style="background:#5A38A8" id="msg-e2">💬</button>
       </div>
-      <div class="med-status">✓ Bevéve</div>
     </div>
-    <div class="med-card t-blue" onclick="showMedDetail('este')">
-      <div class="med-ico">🌙</div>
-      <div class="med-info">
-        <div class="med-time">Este — 20:00</div>
-        <div class="med-pills">Ramipril 5mg · Atorvastatin 10mg</div>
-        <div class="med-pills" style="margin-top:4px;color:#AACCFF">Lefekvés előtt 1 órával</div>
+    <div class="contact-item">
+      <div class="c-av t3">👨‍⚕️</div>
+      <div class="c-info"><div class="c-name">Dr. Nagy János</div><div class="c-role">Háziorvosom</div></div>
+      <div class="c-btns">
+        <button class="cbtn" style="background:#157040" id="call-e3">📞</button>
+        <button class="cbtn" style="background:#1E6AB8" id="vid-e3">📹</button>
+        <button class="cbtn" style="background:#5A38A8" id="msg-e3">💬</button>
       </div>
-      <div class="med-status" style="color:#FFDD66">⏳ Még nem</div>
     </div>
-    <button class="btn-big t-green" onclick="medTaken()">✓ Bevettem a gyógyszereimet</button>
-  </div>
-</div>
-
-<!-- ══════════════ VIDEOHÍVÁS ══════════════ -->
-<div id="s-video" class="screen">
-  <div class="sub-hdr">
-    <button class="btn-back" onclick="go('home')">← Vissza</button>
-    <div class="sub-title">📹 Videohívás</div>
-  </div>
-  <div class="scontent">
-    <div class="section-lbl">Kit hívjak fel?</div>
-    <div class="contact-grid">
-      <div class="contact t-purple" onclick="callPerson('Erzsébet','Lányom')">
-        <div class="c-ico">👩</div>
-        <div class="c-name">Erzsébet</div>
-        <div class="c-role">Lányom</div>
-      </div>
-      <div class="contact t-blue" onclick="callPerson('István','Fiam')">
-        <div class="c-ico">👨</div>
-        <div class="c-name">István</div>
-        <div class="c-role">Fiam</div>
-      </div>
-      <div class="contact t-teal" onclick="callPerson('Dr. Nagy','Háziorvosom')">
-        <div class="c-ico">👨‍⚕️</div>
-        <div class="c-name">Dr. Nagy</div>
-        <div class="c-role">Háziorvosom</div>
+    <div class="chat-panel" id="chat-panel">
+      <div class="cp-hdr"><div class="cp-name" id="cp-name"></div><button class="cp-close" id="cp-close">✕</button></div>
+      <div class="cp-msgs" id="cp-msgs"></div>
+      <div class="cp-bar">
+        <input class="cp-input" id="cp-input" type="text" placeholder="Írj üzenetet...">
+        <button class="icbtn" id="cp-send" style="background:#1E6AB8;width:38px;height:38px;font-size:15px">▶</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════ NAPI CHECK-IN ══════════════ -->
-<div id="s-checkin" class="screen">
-  <div class="sub-hdr">
-    <button class="btn-back" onclick="go('home')">← Vissza</button>
-    <div class="sub-title">☀️ Napi Check-in</div>
+<div id="s-check" class="screen">
+  <div class="shdr">
+    <button class="back" id="check-back">← Vissza</button>
+    <div class="stitle">🩺 Hogy vagyok ma?</div>
   </div>
   <div class="scontent">
-    <div class="section-lbl">Hogy érzed magad ma?</div>
+    <div class="slbl">Hangulat</div>
     <div class="mood-row">
-      <div class="mood-btn t-green" id="m-good" onclick="pickMood('Jól 😊',this)">
-        <div class="mood-ico">😊</div>
-        <div class="mood-lbl">Jól</div>
-      </div>
-      <div class="mood-btn t-orange" id="m-ok" onclick="pickMood('Megfelelően 😐',this)">
-        <div class="mood-ico">😐</div>
-        <div class="mood-lbl">Megfelelően</div>
-      </div>
-      <div class="mood-btn t-red" id="m-bad" onclick="pickMood('Rosszul 😔',this)">
-        <div class="mood-ico">😔</div>
-        <div class="mood-lbl">Rosszul</div>
-      </div>
+      <div class="mood-btn t1" id="m1"><div class="mood-ico">😊</div><div class="mood-lbl">Jól</div></div>
+      <div class="mood-btn t4" id="m2"><div class="mood-ico">😐</div><div class="mood-lbl">Megfelelően</div></div>
+      <div class="mood-btn t6" id="m3"><div class="mood-ico">😔</div><div class="mood-lbl">Rosszul</div></div>
     </div>
-    <div class="section-lbl">Van valami panaszod?</div>
-    <textarea class="checkin-ta" id="ciText" placeholder="Pl. fáj a fejem, fáradt vagyok, nem aludtam jól..."></textarea>
-    <button class="btn-big t-green" onclick="sendCheckin()">✓ Elküldöm a családnak</button>
+    <div class="slbl">Mérési adatok</div>
+    <div class="health-grid">
+      <div class="hcard"><div class="hlbl">🩸 Vérnyomás (Hgmm)</div><div class="hrow"><input class="hinput" id="bp1" type="number" placeholder="120"> / <input class="hinput" id="bp2" type="number" placeholder="80"></div></div>
+      <div class="hcard"><div class="hlbl">🍬 Vércukor (mmol/L)</div><div class="hrow"><input class="hinput" id="sugar" type="number" step="0.1" placeholder="5.5"><div class="hunit">mmol/L</div></div></div>
+      <div class="hcard"><div class="hlbl">❤️ Pulzus (bpm)</div><div class="hrow"><input class="hinput" id="pulse" type="number" placeholder="72"><div class="hunit">bpm</div></div></div>
+      <div class="hcard"><div class="hlbl">⚖️ Testsúly (kg)</div><div class="hrow"><input class="hinput" id="weight" type="number" step="0.1" placeholder="68"><div class="hunit">kg</div></div></div>
+    </div>
+    <div class="slbl">Panaszok</div>
+    <textarea class="textarea" id="complaint" placeholder="Pl. fáj a fejem, rosszul aludtam..."></textarea>
+    <button class="bigbtn t1" id="btn-send-check">✓ Elküldöm az orvosnak és a családnak</button>
   </div>
 </div>
 
-<!-- ══════════════ TRÉNING & EMLÉKEK ══════════════ -->
-<div id="s-cognitive" class="screen">
-  <div class="sub-hdr">
-    <button class="btn-back" onclick="go('home')">← Vissza</button>
-    <div class="sub-title">🧩 Tréning & Emlékek</div>
+<div id="s-game" class="screen">
+  <div class="shdr">
+    <button class="back" id="game-back">← Vissza</button>
+    <div class="stitle">🧩 Játékok és emlékek</div>
   </div>
   <div class="scontent">
-    <div class="section-lbl">Kognitív tréning</div>
-    <div class="game-card t-blue" onclick="startMath()">
-      <div class="game-ico">🔢</div>
-      <div>
-        <div class="game-title">Számolj velem!</div>
-        <div class="game-desc">Egyszerű összeadás és kivonás</div>
-      </div>
+    <div class="slbl">Kognitív játékok</div>
+    <div class="card t2" id="btn-math"><div class="card-ico">🔢</div><div class="card-info"><div class="card-title">Számolj velem!</div><div class="card-sub">Összeadás és kivonás</div></div></div>
+    <div class="card t5" id="btn-mem"><div class="card-ico">🧠</div><div class="card-info"><div class="card-title">Emlékezz rá!</div><div class="card-sub">Jegyezd meg a szavakat!</div></div></div>
+    <div class="card t3" id="btn-word"><div class="card-ico">📖</div><div class="card-info"><div class="card-title">Szókirakós</div><div class="card-sub">Fejezd be a közmondást!</div></div></div>
+    <div class="slbl" style="margin-top:20px">📔 Emlékeim</div>
+    <div class="mem-add">
+      <input class="mem-input" id="mem-input" type="text" placeholder="Írj egy emléket vagy jegyzetet...">
+      <button class="icbtn t1" id="mem-add-btn" style="background:#157040;width:44px;height:44px;font-size:20px;flex-shrink:0">＋</button>
     </div>
-    <div class="game-card t-purple" onclick="startMemory()">
-      <div class="game-ico">🧠</div>
-      <div>
-        <div class="game-title">Emlékezz rá!</div>
-        <div class="game-desc">Szavak és képek megjegyzése</div>
-      </div>
-    </div>
-    <div class="game-card t-teal" onclick="startWords()">
-      <div class="game-ico">📖</div>
-      <div>
-        <div class="game-title">Szókirakós</div>
-        <div class="game-desc">Magyar közmondások és szavak</div>
-      </div>
-    </div>
-    <div class="section-lbl" style="margin-top:20px">Emlékek</div>
-    <div class="memory-grid">
-      <div class="memory-card">
-        <div class="memory-date">2026. május 20.</div>
-        <div class="memory-text">Erzsébet meglátogatott. Együtt sétáltunk a parkban. 🌸</div>
-      </div>
-      <div class="memory-card">
-        <div class="memory-date">2026. május 15.</div>
-        <div class="memory-text">István küldte a kép az unokákról. Micsoda mosolyok! 😄</div>
-      </div>
-      <div class="memory-card">
-        <div class="memory-date">2026. május 10.</div>
-        <div class="memory-text">Dr. Nagy azt mondta minden rendben van. 👍</div>
-      </div>
-      <div class="memory-card">
-        <div class="memory-date">2026. május 1.</div>
-        <div class="memory-text">Május elseje! Kimentünk a kerbe virágot nézni. 🌷</div>
-      </div>
-    </div>
+    <div class="mem-grid" id="mem-grid"></div>
   </div>
 </div>
 
-<!-- ══════════════ OVERLAY ══════════════ -->
 <div class="overlay" id="overlay">
   <div class="dialog">
-    <div class="dlg-title" id="dlgTitle"></div>
-    <div class="dlg-msg" id="dlgMsg"></div>
-    <div class="dlg-btns" id="dlgBtns"></div>
+    <div class="dlg-title" id="dlg-title"></div>
+    <div class="dlg-msg" id="dlg-msg"></div>
+    <div class="dlg-extra" id="dlg-extra"></div>
+    <div class="dlg-btns" id="dlg-btns"></div>
   </div>
 </div>
 
-<!-- ══════════════ TOAST ══════════════ -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ---- API KULCS ----
-const ANTHROPIC_KEY = 'IDE_IRD_AZ_API_KULCSOT';
+var API_KEY = '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';
+var OPENAI_URL = 'https://api.openai.com/v1/chat/completions';
+var USER_NAME = 'Ilona néni';
+var chatHistory = [];
+var selectedMood = '';
+var isListening = false;
+var SR = null;
+var medDone = {};
+var memories = [];
+var pendingImg = null;
+var memWords = [];
+var cpPerson = '';
+var cpData = {};
+var toastTimer = null;
 
-// ---- ÁLLAPOT ----
-let chatHistory = [];
-let selectedMood = '';
-let toastTimer = null;
+try { medDone = JSON.parse(localStorage.getItem('med') || '{}'); } catch(e) {}
+try { memories = JSON.parse(localStorage.getItem('mems') || '[]'); } catch(e) {}
 
-// ---- NAVIGÁCIÓ ----
 function go(name) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  var screens = document.querySelectorAll('.screen');
+  for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
   document.getElementById('s-' + name).classList.add('active');
   if (name === 'ai' && document.getElementById('chat-msgs').children.length === 0) {
-    addAiMsg('Jó napot! Én vagyok az ASKlepios AI asszisztense. Miben segíthetek ma?');
+    addAiMsg('Jó ' + greet() + ', ' + USER_NAME + '! Kérdezhet bármit!');
   }
+  if (name === 'game') renderMems();
+  if (name === 'med') updateMed();
 }
 
-// ---- ÓRA ----
+function greet() {
+  var h = new Date().getHours();
+  return h < 12 ? 'reggelt' : h < 18 ? 'napot' : 'estét';
+}
+
 function tick() {
-  const n = new Date();
-  const pad = x => String(x).padStart(2,'0');
-  document.getElementById('cTime').textContent = pad(n.getHours()) + ':' + pad(n.getMinutes());
-  const nap = ['vasárnap','hétfő','kedd','szerda','csütörtök','péntek','szombat'];
-  const ho = ['január','február','március','április','május','június','július','augusztus','szeptember','október','november','december'];
-  document.getElementById('cDate').textContent = n.getFullYear() + '. ' + ho[n.getMonth()] + ' ' + n.getDate() + '. · ' + nap[n.getDay()];
-  
-  // Gyógyszer következő idő
-  const h = n.getHours(), m = n.getMinutes();
-  let next = '';
-  if (h < 8 || (h === 8 && m === 0)) next = '08:00';
-  else if (h < 13) next = '13:00';
-  else if (h < 20) next = '20:00';
-  else next = 'Holnap 08:00';
-  document.getElementById('nextMedTile').textContent = 'Következő: ' + next;
+  var n = new Date();
+  var h = String(n.getHours()).padStart(2, '0');
+  var m = String(n.getMinutes()).padStart(2, '0');
+  document.getElementById('ctime').textContent = h + ':' + m;
+  document.getElementById('greet').textContent = 'Jó ' + greet() + ', ' + USER_NAME + '!';
+  var months = ['január','február','március','április','május','június','július','augusztus','szeptember','október','november','december'];
+  var days = ['vasárnap','hétfő','kedd','szerda','csütörtök','péntek','szombat'];
+  document.getElementById('cdate').textContent = n.getFullYear() + '. ' + months[n.getMonth()] + ' ' + n.getDate() + '. · ' + days[n.getDay()];
+  var hh = n.getHours();
+  var next = hh < 8 ? '08:00' : hh < 13 ? '13:00' : hh < 20 ? '20:00' : 'Holnap 08:00';
+  document.getElementById('med-sub').textContent = 'Következő: ' + next;
 }
 tick();
 setInterval(tick, 1000);
 
-// ---- AI CHAT ----
+document.getElementById('btn-med').onclick = function() { go('med'); };
+document.getElementById('btn-ai').onclick = function() { go('ai'); };
+document.getElementById('btn-chat').onclick = function() { go('chat'); };
+document.getElementById('btn-check').onclick = function() { go('check'); };
+document.getElementById('btn-game').onclick = function() { go('game'); };
+document.getElementById('btn-sos').onclick = function() { showSOS(); };
+document.getElementById('ai-back').onclick = function() { stopListen(); go('home'); };
+document.getElementById('med-back').onclick = function() { go('home'); };
+document.getElementById('chat-back').onclick = function() { closeCP(); go('home'); };
+document.getElementById('check-back').onclick = function() { go('home'); };
+document.getElementById('game-back').onclick = function() { go('home'); };
+
+document.getElementById('btn-send').onclick = function() { sendChat(); };
+document.getElementById('chat-input').onkeypress = function(e) { if (e.key === 'Enter') sendChat(); };
+document.getElementById('btn-mic').onclick = function() { toggleListen(); };
+document.getElementById('btn-img').onclick = function() { document.getElementById('fileInput').click(); };
+document.getElementById('fileInput').onchange = function(e) {
+  var f = e.target.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function(ev) { pendingImg = ev.target.result; toast('Kép betöltve! Nyomj küldés-t.'); };
+  r.readAsDataURL(f);
+  e.target.value = '';
+};
+
+document.getElementById('mb-r').onclick = function() { takeMed('r'); };
+document.getElementById('mb-d').onclick = function() { takeMed('d'); };
+document.getElementById('mb-e').onclick = function() { takeMed('e'); };
+
+document.getElementById('call-e1').onclick = function() { simCall('Erzsébet', 'hang'); };
+document.getElementById('vid-e1').onclick = function() { simCall('Erzsébet', 'videó'); };
+document.getElementById('msg-e1').onclick = function() { openCP('Erzsébet'); };
+document.getElementById('call-e2').onclick = function() { simCall('István', 'hang'); };
+document.getElementById('vid-e2').onclick = function() { simCall('István', 'videó'); };
+document.getElementById('msg-e2').onclick = function() { openCP('István'); };
+document.getElementById('call-e3').onclick = function() { simCall('Dr. Nagy', 'hang'); };
+document.getElementById('vid-e3').onclick = function() { simCall('Dr. Nagy', 'videó'); };
+document.getElementById('msg-e3').onclick = function() { openCP('Dr. Nagy'); };
+document.getElementById('cp-close').onclick = function() { closeCP(); };
+document.getElementById('cp-send').onclick = function() { sendCP(); };
+document.getElementById('cp-input').onkeypress = function(e) { if (e.key === 'Enter') sendCP(); };
+
+document.getElementById('m1').onclick = function() { pickMood('Jól', this); };
+document.getElementById('m2').onclick = function() { pickMood('Megfelelően', this); };
+document.getElementById('m3').onclick = function() { pickMood('Rosszul', this); };
+document.getElementById('btn-send-check').onclick = function() { sendCheck(); };
+
+document.getElementById('btn-math').onclick = function() { startMath(); };
+document.getElementById('btn-mem').onclick = function() { startMemGame(); };
+document.getElementById('btn-word').onclick = function() { startWord(); };
+document.getElementById('mem-add-btn').onclick = function() { addMem(); };
+
 function sendChat() {
-  const inp = document.getElementById('chatIn');
-  const txt = inp.value.trim();
-  if (!txt) return;
+  var inp = document.getElementById('chat-input');
+  var txt = inp.value.trim();
+  if (!txt && !pendingImg) return;
   inp.value = '';
-  addUserMsg(txt);
-  callAI(txt);
-}
-
-function addUserMsg(t) {
-  const d = document.createElement('div');
-  d.className = 'msg msg-user';
-  d.textContent = t;
-  document.getElementById('chat-msgs').appendChild(d);
-  scrollBottom();
-}
-
-function addAiMsg(t) {
-  const d = document.createElement('div');
-  d.className = 'msg msg-ai';
-  d.textContent = t;
-  document.getElementById('chat-msgs').appendChild(d);
-  scrollBottom();
-  speak(t);
-}
-
-function scrollBottom() {
-  const c = document.getElementById('chat-msgs');
-  setTimeout(() => c.scrollTop = c.scrollHeight, 50);
-}
-
-async function callAI(txt) {
-  const stat = document.getElementById('aiStat');
-  stat.textContent = '● Gondolkodom...';
-  stat.style.color = '#FFAA44';
-
-  const loading = document.createElement('div');
-  loading.className = 'msg msg-typing';
-  loading.id = 'typing';
-  loading.textContent = '...';
-  document.getElementById('chat-msgs').appendChild(loading);
-  scrollBottom();
-
-  chatHistory.push({role:'user', content: txt});
-
-  try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 500,
-        system: 'Te egy barátságos, türelmes magyar AI asszisztens vagy, aki idős embereknek segít. A neve ASKlepios. Mindig magyarul válaszolsz, egyszerű, érthető, rövid mondatokban. Soha nem adsz orvosi diagnózist. Ha egészségügyi problémát említ, orvoshoz irányítod. Légy meleg, empatikus, türelmes.',
-        messages: chatHistory
-      })
-    });
-    const data = await r.json();
-    const reply = data.content[0].text;
-    chatHistory.push({role:'assistant', content: reply});
-    document.getElementById('typing')?.remove();
-    addAiMsg(reply);
-  } catch(e) {
-    document.getElementById('typing')?.remove();
-    addAiMsg('Sajnálom, most nem tudok kapcsolódni. Kérlek próbáld újra!');
+  if (pendingImg) {
+    addUserMsg(txt || 'Képet küldtem');
+    callClaudeImg(txt || 'Mit látsz ezen a képen?', pendingImg);
+    pendingImg = null;
+  } else {
+    addUserMsg(txt);
+    callClaude(txt);
   }
-
-  stat.textContent = '● Kész';
-  stat.style.color = '#44EE88';
 }
 
-function speak(t) {
+function addUserMsg(txt) {
+  var d = document.createElement('div');
+  d.className = 'msg msg-u';
+  d.textContent = txt;
+  document.getElementById('chat-msgs').appendChild(d);
+  scrollChat();
+}
+
+function addAiMsg(txt) {
+  var d = document.createElement('div');
+  d.className = 'msg msg-a';
+  d.textContent = txt;
+  document.getElementById('chat-msgs').appendChild(d);
+  scrollChat();
+  speakTxt(txt);
+}
+
+function scrollChat() {
+  var c = document.getElementById('chat-msgs');
+  setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
+}
+
+function setStat(txt, color) {
+  var s = document.getElementById('ai-stat');
+  s.textContent = '● ' + txt;
+  s.style.color = color;
+}
+
+function callClaude(txt) {
+  setStat('Gondolkodom...', '#FFAA44');
+  var dot = document.createElement('div');
+  dot.className = 'msg msg-a'; dot.textContent = '...'; dot.id = 'typing';
+  document.getElementById('chat-msgs').appendChild(dot);
+  scrollChat();
+  chatHistory.push({ role: 'user', content: txt });
+  var msgs = [{ role: 'system', content: 'Te az ASKlepios, egy baratsagos, turelmetes magyar AI asszisztens vagy, aki idos embereknek segit. Mindig magyarul valaszolsz, rovid egyszeru mondatokban. Soha nem adsz orvosi diagnolist.' }].concat(chatHistory);
+  var body = JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 500, messages: msgs });
+  fetch(OPENAI_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY },
+    body: body
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    var typing = document.getElementById('typing');
+    if (typing) typing.remove();
+    var reply = d.choices[0].message.content;
+    chatHistory.push({ role: 'assistant', content: reply });
+    addAiMsg(reply);
+    setStat('Kész', '#44EE88');
+  }).catch(function() {
+    var typing = document.getElementById('typing');
+    if (typing) typing.remove();
+    addAiMsg('Sajnalom, most nem tudok kapcsolodni.');
+    setStat('Kész', '#44EE88');
+  });
+}
+
+function callClaudeImg(txt, imgData) {
+  setStat('Elemzem a képet...', '#FFAA44');
+  var dot = document.createElement('div');
+  dot.className = 'msg msg-a'; dot.textContent = '...'; dot.id = 'typing';
+  document.getElementById('chat-msgs').appendChild(dot);
+  scrollChat();
+  var base64 = imgData.split(',')[1];
+  var mt = imgData.split(';')[0].split(':')[1];
+  var body = JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 500, messages: [
+    { role: 'system', content: 'Te az ASKlepios, egy baratsagos magyar AI asszisztens vagy idos embereknek. Egyszeru magyarazatokat adsz magyarul.' },
+    { role: 'user', content: [{ type: 'image_url', image_url: { url: imgData } }, { type: 'text', text: txt }] }
+  ]});
+  fetch(OPENAI_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + API_KEY },
+    body: body
+  }).then(function(r) { return r.json(); }).then(function(d) {
+    var typing = document.getElementById('typing');
+    if (typing) typing.remove();
+    addAiMsg(d.choices[0].message.content);
+    setStat('Kész', '#44EE88');
+  }).catch(function() {
+    var typing = document.getElementById('typing');
+    if (typing) typing.remove();
+    addAiMsg('Nem tudtam elemezni a kepet.');
+    setStat('Kész', '#44EE88');
+  });
+}
+
+function toggleListen() {
+  if (isListening) stopListen(); else startListen();
+}
+
+function startListen() {
+  var SRClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SRClass) { toast('Hangfelismerés nem elérhető'); return; }
+  SR = new SRClass();
+  SR.lang = 'hu-HU'; SR.continuous = false; SR.interimResults = false;
+  SR.onstart = function() {
+    isListening = true;
+    document.getElementById('btn-mic').style.background = '#B03030';
+    setStat('Hallgatom...', '#44AAFF');
+  };
+  SR.onresult = function(e) {
+    document.getElementById('chat-input').value = e.results[0][0].transcript;
+    sendChat();
+  };
+  SR.onend = function() { stopListen(); };
+  SR.onerror = function() { stopListen(); toast('Nem értettem, próbáld újra'); };
+  SR.start();
+}
+
+function stopListen() {
+  if (SR) { try { SR.stop(); } catch(e) {} SR = null; }
+  isListening = false;
+  document.getElementById('btn-mic').style.background = '#1E6AB8';
+  setStat('Kész', '#44EE88');
+}
+
+function speakTxt(txt) {
   if (!window.speechSynthesis) return;
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(t);
-  u.lang = 'hu-HU';
-  u.rate = 0.9;
+  var u = new SpeechSynthesisUtterance(txt);
+  u.lang = 'hu-HU'; u.rate = 0.88; u.pitch = 1.05;
+  var voices = speechSynthesis.getVoices();
+  var hv = null;
+  for (var i = 0; i < voices.length; i++) { if (voices[i].lang.indexOf('hu') === 0) { hv = voices[i]; break; } }
+  if (hv) u.voice = hv;
   speechSynthesis.speak(u);
 }
 
-function startVoice() {
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SR) { toast('Hangfelismerés nem elérhető'); return; }
-  const r = new SR();
-  r.lang = 'hu-HU';
-  r.onresult = e => {
-    document.getElementById('chatIn').value = e.results[0][0].transcript;
-    sendChat();
-  };
-  r.onerror = () => toast('Nem értettem, próbáld újra');
-  r.start();
-  toast('🎤 Hallgatom... Beszélj!');
+function takeMed(which) {
+  var today = new Date().toDateString();
+  if (!medDone[today]) medDone[today] = {};
+  medDone[today][which] = true;
+  try { localStorage.setItem('med', JSON.stringify(medDone)); } catch(e) {}
+  updateMed();
+  var names = { r: 'Reggeli', d: 'Déli', e: 'Esti' };
+  toast('✅ ' + names[which] + ' gyógyszer rögzítve!');
 }
 
-// ---- GYÓGYSZER ----
-function showMedDetail(when) {
-  const info = {
-    reggel: {t:'🌅 Reggeli gyógyszerek', m:'Metformin 500mg\nRamipril 5mg\n\nIdőpont: 08:00\nHogyan: Étkezés után, egy pohár vízzel\n\n✓ Ma már bevéve!'},
-    del:    {t:'☀️ Déli gyógyszer', m:'Metformin 500mg\n\nIdőpont: 13:00\nHogyan: Étkezés közben\n\n✓ Ma már bevéve!'},
-    este:   {t:'🌙 Esti gyógyszerek', m:'Ramipril 5mg\nAtorvastatin 10mg\n\nIdőpont: 20:00\nHogyan: Lefekvés előtt 1 órával\n\n⏳ Még nem bevéve'}
-  };
-  const i = info[when];
-  dlg(i.t, i.m, [{t:'Rendben', c:'dlg-ok', f:closeDlg}]);
+function updateMed() {
+  var today = new Date().toDateString();
+  var done = (medDone[today] || {});
+  var ids = ['r', 'd', 'e'];
+  for (var i = 0; i < ids.length; i++) {
+    var w = ids[i];
+    var isDone = !!done[w];
+    document.getElementById('ms-' + w).textContent = isDone ? '✅ Bevéve' : '⏳ Még nem';
+    document.getElementById('mc-' + w).style.opacity = isDone ? '0.6' : '1';
+    var btn = document.getElementById('mb-' + w);
+    if (isDone) { btn.textContent = '✓ Már bevéve'; btn.classList.add('done'); }
+    else { btn.classList.remove('done'); }
+  }
 }
 
-function medTaken() {
-  toast('✅ Rögzítve! A család értesítve lett.');
-  setTimeout(() => go('home'), 1500);
+function simCall(name, type) {
+  showDlg('📞 ' + type.charAt(0).toUpperCase() + type.slice(1) + 'hívás',
+    name + ' ' + type + 'hívása folyamatban...\n\n(Demo verzió)',
+    [{ t: 'Befejezés', c: 'db-no', f: closeDlg }]);
 }
 
-// ---- VIDEOHÍVÁS ----
-function callPerson(name, role) {
-  dlg('📹 Hívás indítása...', name + ' (' + role + ') hívása...\n\n(Demo verzió – valós videohíváshoz mindkét félnek telepített alkalmazás szükséges)',
-    [{t:'Hívás leállítása', c:'dlg-no', f:closeDlg}]
-  );
+function openCP(name) {
+  cpPerson = name;
+  if (!cpData[name]) cpData[name] = [];
+  document.getElementById('cp-name').textContent = '💬 ' + name;
+  document.getElementById('chat-panel').classList.add('on');
+  renderCP();
+  setTimeout(function() {
+    var sc = document.getElementById('s-chat').querySelector('.scontent');
+    sc.scrollTop = sc.scrollHeight;
+  }, 100);
 }
 
-// ---- CHECK-IN ----
+function closeCP() {
+  document.getElementById('chat-panel').classList.remove('on');
+  cpPerson = '';
+}
+
+function renderCP() {
+  var c = document.getElementById('cp-msgs'); c.innerHTML = '';
+  var msgs = cpData[cpPerson] || [];
+  for (var i = 0; i < msgs.length; i++) {
+    var d = document.createElement('div');
+    d.className = 'cp-msg ' + (msgs[i].out ? 'cp-out' : 'cp-in');
+    d.textContent = msgs[i].txt;
+    c.appendChild(d);
+  }
+  setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
+}
+
+function sendCP() {
+  var inp = document.getElementById('cp-input');
+  var txt = inp.value.trim(); if (!txt) return;
+  inp.value = '';
+  cpData[cpPerson].push({ txt: txt, out: true });
+  renderCP();
+  var replies = ['Rendben! 😊', 'Hamarosan hívunk!', 'Vigyázz magadra! ❤️', 'Minden rendben?', 'Holnap jövünk!'];
+  var ri = replies;
+  setTimeout(function() {
+    cpData[cpPerson].push({ txt: ri[Math.floor(Math.random() * ri.length)], out: false });
+    renderCP();
+  }, 1500);
+}
+
 function pickMood(mood, el) {
   selectedMood = mood;
-  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('sel'));
+  var btns = document.querySelectorAll('.mood-btn');
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove('sel');
   el.classList.add('sel');
 }
 
-function sendCheckin() {
-  const mood = selectedMood || 'Nincs megadva';
-  const panasz = document.getElementById('ciText').value;
-  const msg = '✅ Elküldve a családnak!\n\nHangulat: ' + mood + (panasz ? '\nPanasz: ' + panasz : '');
-  dlg('Napi Check-in elküldve', msg, [{t:'Rendben', c:'dlg-ok', f:() => { closeDlg(); go('home'); }}]);
+function sendCheck() {
+  var bp = document.getElementById('bp1').value + '/' + document.getElementById('bp2').value;
+  var sugar = document.getElementById('sugar').value;
+  var pulse = document.getElementById('pulse').value;
+  var weight = document.getElementById('weight').value;
+  var comp = document.getElementById('complaint').value;
+  var mood = selectedMood || 'Nincs megadva';
+  var msg = 'Hangulat: ' + mood + '\nVérnyomás: ' + (bp === '/' ? 'N/A' : bp) + ' Hgmm\nVércukor: ' + (sugar || 'N/A') + ' mmol/L\nPulzus: ' + (pulse || 'N/A') + ' bpm\nTestsúly: ' + (weight || 'N/A') + ' kg' + (comp ? '\nPanasz: ' + comp : '');
+  showDlg('✅ Elküldve!', 'Adatok elküldve Dr. Nagynak és a családnak:\n\n' + msg,
+    [{ t: 'Rendben', c: 'db-ok', f: function() { closeDlg(); go('home'); } }]);
 }
 
-// ---- KOGNITÍV ----
-const mQs = [
-  {q:'15 + 27 = ?', o:['40','42','44','38'], a:1},
-  {q:'50 - 13 = ?', o:['37','33','47','27'], a:0},
-  {q:'6 × 7 = ?',   o:['36','48','42','54'], a:2},
-  {q:'100 - 35 = ?',o:['55','65','75','45'], a:1},
-  {q:'8 + 14 = ?',  o:['20','22','24','18'], a:1},
+var mathQs = [
+  { q: '15 + 27 = ?', o: ['40', '42', '44', '38'], a: 1 },
+  { q: '50 - 13 = ?', o: ['37', '33', '47', '27'], a: 0 },
+  { q: '6 x 7 = ?', o: ['36', '48', '42', '54'], a: 2 },
+  { q: '100 - 35 = ?', o: ['55', '65', '75', '45'], a: 1 },
+  { q: '8 + 14 = ?', o: ['20', '22', '24', '18'], a: 1 }
 ];
 
 function startMath() {
-  const q = mQs[Math.floor(Math.random()*mQs.length)];
-  dlg('🔢 Számolj velem!', q.q,
-    q.o.map((o,i) => ({t:o, c:'dlg-no', f:() => {
-      closeDlg();
-      setTimeout(() => toast(i===q.a ? '🎉 Helyes! Brávó!' : '❌ Nem ez volt. Próbáld újra!'), 100);
-    }}))
-  );
-}
-
-function startMemory() {
-  const ws = ['alma','ház','kert','nap','hold','virág'];
-  const sel = ws.sort(()=>Math.random()-.5).slice(0,4);
-  dlg('🧠 Jegyezd meg ezeket!',
-    '• ' + sel.join('\n• ') + '\n\nNézd meg jól, majd nyomj Tovább-t!',
-    [{t:'Tovább!', c:'dlg-ok', f:() => {
-      closeDlg();
-      setTimeout(() => toast('Szép munka! Emlékeztél rájuk? (' + sel[0] + ' szerepelt)'), 100);
-    }}]
-  );
-}
-
-function startWords() {
-  const ps = [
-    {q:'"Lassan járj, tovább ___!"', a:'érsz'},
-    {q:'"Aki korán kel, aranyat ___!"', a:'lel'},
-    {q:'"Több szem többet ___!"', a:'lát'},
-    {q:'"Jobb ma egy veréb, mint holnap egy ___!"', a:'túzok'},
-  ];
-  const p = ps[Math.floor(Math.random()*ps.length)];
-  dlg('📖 Fejezd be a mondást!', p.q,
-    [
-      {t:'Megmutat', c:'dlg-ok', f:() => { closeDlg(); setTimeout(() => toast('A helyes válasz: "' + p.a + '"'), 100); }},
-      {t:'Vissza', c:'dlg-no', f:closeDlg}
-    ]
-  );
-}
-
-// ---- SEGÍTSÉG ----
-function showEmergency() {
-  dlg('🆘 Segítségkérés',
-    'Értesítjük a családodat és az orvosát!\n\nBiztosan segítségre van szükséged?',
-    [
-      {t:'IGEN – Segítség kell!', c:'dlg-yes', f:() => {
+  var q = mathQs[Math.floor(Math.random() * mathQs.length)];
+  var btns = [];
+  for (var i = 0; i < q.o.length; i++) {
+    (function(idx) {
+      btns.push({ t: q.o[idx], c: 'db-no', f: function() {
         closeDlg();
-        setTimeout(() => toast('✅ Értesítés elküldve! A család és Dr. Nagy tudja.'), 100);
-      }},
-      {t:'Nem, tévedés volt', c:'dlg-no', f:closeDlg}
-    ]
-  );
+        if (idx === q.a) setTimeout(function() { showDlg('Helyes!', 'Bravo! Nagyon ügyes!', [{ t: 'Újra', c: 'db-ok', f: function() { closeDlg(); startMath(); } }, { t: 'Vissza', c: 'db-no', f: closeDlg }]); }, 100);
+        else setTimeout(function() { showDlg('Nem ez volt', 'A helyes válasz: ' + q.o[q.a], [{ t: 'Újra', c: 'db-ok', f: function() { closeDlg(); startMath(); } }, { t: 'Vissza', c: 'db-no', f: closeDlg }]); }, 100);
+      }});
+    })(i);
+  }
+  showDlg('Számolj velem!', q.q, btns);
 }
 
-// ---- DIALOG ----
-function dlg(title, msg, btns) {
-  document.getElementById('dlgTitle').textContent = title;
-  document.getElementById('dlgMsg').textContent = msg;
-  const bc = document.getElementById('dlgBtns');
-  bc.innerHTML = '';
-  btns.forEach(b => {
-    const btn = document.createElement('button');
-    btn.className = 'dlg-btn ' + b.c;
+var allWords = ['alma', 'ház', 'kert', 'nap', 'hold', 'virág', 'madár', 'folyó', 'erdő', 'könyv'];
+
+function startMemGame() {
+  memWords = allWords.slice().sort(function() { return Math.random() - 0.5; }).slice(0, 5);
+  var txt = 'Jegyezd meg ezt az 5 szót:\n\n';
+  for (var i = 0; i < memWords.length; i++) txt += (i + 1) + '. ' + memWords[i] + '\n';
+  showDlg('Emlékezz rá!', txt, [{ t: 'Készen vagyok!', c: 'db-ok', f: function() { closeDlg(); setTimeout(testMem, 300); } }]);
+}
+
+function testMem() {
+  var correct = memWords[Math.floor(Math.random() * memWords.length)];
+  var wrong = allWords.filter(function(w) { return memWords.indexOf(w) === -1; }).sort(function() { return Math.random() - 0.5; }).slice(0, 3);
+  var opts = [correct].concat(wrong).sort(function() { return Math.random() - 0.5; });
+  var btns = [];
+  for (var i = 0; i < opts.length; i++) {
+    (function(opt) {
+      btns.push({ t: opt, c: 'db-no', f: function() {
+        closeDlg();
+        if (opt === correct) setTimeout(function() { showDlg('Helyes!', '"' + correct + '" valóban szerepelt! Kitűnő memória!', [{ t: 'Még egyszer', c: 'db-ok', f: function() { closeDlg(); startMemGame(); } }, { t: 'Vissza', c: 'db-no', f: closeDlg }]); }, 100);
+        else setTimeout(function() { showDlg('Nem ez volt', 'A helyes válasz: "' + correct + '"', [{ t: 'Újra', c: 'db-ok', f: function() { closeDlg(); startMemGame(); } }, { t: 'Vissza', c: 'db-no', f: closeDlg }]); }, 100);
+      }});
+    })(opts[i]);
+  }
+  showDlg('Melyik szerepelt?', 'Emlékszel? Melyik szó volt a listában?', btns);
+}
+
+var proverbs = [
+  { q: 'Lassan járj, tovább ___!', a: 'érsz' },
+  { q: 'Aki korán kel, aranyat ___!', a: 'lel' },
+  { q: 'Több szem többet ___!', a: 'lát' },
+  { q: 'Jobb ma egy veréb, mint holnap egy ___!', a: 'túzok' }
+];
+
+function startWord() {
+  var p = proverbs[Math.floor(Math.random() * proverbs.length)];
+  document.getElementById('dlg-extra').innerHTML = '<input id="word-ans" type="text" placeholder="Írd be a hiányzó szót...">';
+  showDlg('Fejezd be a mondást!', p.q, [
+    { t: 'Ellenőrzés', c: 'db-ok', f: function() {
+      var el = document.getElementById('word-ans');
+      var ans = el ? el.value.trim().toLowerCase() : '';
+      closeDlg();
+      if (ans === p.a) setTimeout(function() { showDlg('Helyes!', 'Pontosan! "' + p.a + '" a helyes válasz! Nagyon okos!', [{ t: 'Újra', c: 'db-ok', f: function() { closeDlg(); startWord(); } }, { t: 'Vissza', c: 'db-no', f: closeDlg }]); }, 100);
+      else setTimeout(function() { showDlg('Nem egészen', 'A helyes válasz: "' + p.a + '"', [{ t: 'Újra', c: 'db-ok', f: function() { closeDlg(); startWord(); } }, { t: 'Vissza', c: 'db-no', f: closeDlg }]); }, 100);
+    }},
+    { t: 'Megmutat', c: 'db-no', f: function() { closeDlg(); toast('A helyes válasz: "' + p.a + '"'); } }
+  ]);
+}
+
+function addMem() {
+  var inp = document.getElementById('mem-input');
+  var txt = inp.value.trim(); if (!txt) return;
+  inp.value = '';
+  var today = new Date().toLocaleDateString('hu-HU');
+  memories.unshift({ txt: txt, date: today, id: Date.now() });
+  try { localStorage.setItem('mems', JSON.stringify(memories)); } catch(e) {}
+  renderMems();
+  toast('Emlékeztetőt elmentettem!');
+}
+
+function delMem(id) {
+  memories = memories.filter(function(m) { return m.id !== id; });
+  try { localStorage.setItem('mems', JSON.stringify(memories)); } catch(e) {}
+  renderMems();
+}
+
+function renderMems() {
+  var c = document.getElementById('mem-grid'); c.innerHTML = '';
+  var all = memories.length > 0 ? memories : [
+    { txt: 'Erzsébet meglátogatott. Együtt sétáltunk a parkban.', date: '2026. május 20.', id: 1 },
+    { txt: 'István küldte a képet az unokákról. Micsoda mosolyok!', date: '2026. május 15.', id: 2 }
+  ];
+  for (var i = 0; i < all.length; i++) {
+    var m = all[i];
+    var d = document.createElement('div');
+    d.className = 'memcard';
+    d.innerHTML = '<div class="memdate">' + m.date + '</div><div class="memtxt">' + m.txt + '</div>';
+    if (m.id > 2) {
+      var delBtn = document.createElement('button');
+      delBtn.className = 'memdel';
+      delBtn.textContent = '✕';
+      (function(mid) { delBtn.onclick = function() { delMem(mid); }; })(m.id);
+      d.appendChild(delBtn);
+    }
+    c.appendChild(d);
+  }
+}
+
+function showSOS() {
+  showDlg('SEGÍTSÉGKÉRÉS', 'Baj van?\n\nHa megerősíted:\n• Hívjuk a 112-t\n• Értesítjük Erzsébetet\n• Értesítjük Istvánt\n• Értesítjük Dr. Nagyot\n\nBiztosan segítségre van szükséged?', [
+    { t: 'IGEN - SEGÍTSÉG!', c: 'db-yes', f: function() { closeDlg(); doSOS(); } },
+    { t: 'Nem, tévedtem', c: 'db-no', f: closeDlg }
+  ]);
+}
+
+function doSOS() {
+  showDlg('Értesítések elküldve', '✅ 112 mentők értesítve\n✅ Erzsébet értesítve\n✅ István értesítve\n✅ Dr. Nagy János értesítve\n\nIdő: ' + new Date().toLocaleTimeString('hu-HU'), [{ t: 'Rendben', c: 'db-ok', f: closeDlg }]);
+}
+
+function showDlg(title, msg, btns) {
+  document.getElementById('dlg-title').textContent = title;
+  document.getElementById('dlg-msg').textContent = msg;
+  var bc = document.getElementById('dlg-btns'); bc.innerHTML = '';
+  for (var i = 0; i < btns.length; i++) {
+    var b = btns[i];
+    var btn = document.createElement('button');
+    btn.className = 'dbtn ' + b.c;
     btn.textContent = b.t;
     btn.onclick = b.f;
     bc.appendChild(btn);
-  });
+  }
   document.getElementById('overlay').classList.add('on');
 }
 
 function closeDlg() {
   document.getElementById('overlay').classList.remove('on');
+  document.getElementById('dlg-extra').innerHTML = '';
 }
 
-// ---- TOAST ----
 function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('on');
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('on');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('on'), 3000);
+  toastTimer = setTimeout(function() { t.classList.remove('on'); }, 3000);
 }
 
-// ---- INIT ----
-go('home');
+renderMems();
+updateMed();
 </script>
 </body>
 </html>
